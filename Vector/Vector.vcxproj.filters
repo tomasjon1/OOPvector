@@ -20,7 +20,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CustomVectorLib.hpp">
+    <ClInclude Include="CustomVectorLib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
