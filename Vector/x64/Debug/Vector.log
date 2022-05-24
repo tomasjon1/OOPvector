@@ -1,0 +1,17 @@
+﻿  Vector.cpp
+C:\Users\Tomas Jonauskas\Desktop\VU dokai\1.2\OOP\Vector\Vector\Vector.cpp(72,28): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Tomas Jonauskas\Desktop\VU dokai\1.2\OOP\Vector\Vector\Vector.cpp(77,28): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Tomas Jonauskas\Desktop\VU dokai\1.2\OOP\Vector\Vector\Vector.cpp(85,18): warning C4101: 'i': unreferenced local variable
+C:\Users\Tomas Jonauskas\Desktop\VU dokai\1.2\OOP\Vector\Vector\CustomVectorLib.hpp(112,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Tomas Jonauskas\Desktop\VU dokai\1.2\OOP\Vector\Vector\CustomVectorLib.hpp(111): message : while compiling class template member function 'CustomVector<int>::CustomVector(const std::initializer_list<valueType> &)'
+          with
+          [
+              valueType=int
+          ]
+C:\Users\Tomas Jonauskas\Desktop\VU dokai\1.2\OOP\Vector\Vector\Vector.cpp(48): message : see reference to function template instantiation 'CustomVector<int>::CustomVector(const std::initializer_list<valueType> &)' being compiled
+          with
+          [
+              valueType=int
+          ]
+C:\Users\Tomas Jonauskas\Desktop\VU dokai\1.2\OOP\Vector\Vector\Vector.cpp(48): message : see reference to class template instantiation 'CustomVector<int>' being compiled
+  Vector.vcxproj -> C:\Users\Tomas Jonauskas\Desktop\VU dokai\1.2\OOP\Vector\x64\Debug\Vector.exe

@@ -5,7 +5,12 @@
       "ProjectGuid": "c90ca14e-3063-476b-b242-607362ce5b86",
       "DisplayName": "Vector",
       "ColorIndex": 0
+    },
+    "9f8a97f6-5c1d-4faa-b06c-aae20250afd8": {
+      "ProjectGuid": "9f8a97f6-5c1d-4faa-b06c-aae20250afd8",
+      "DisplayName": "Solution Items",
+      "ColorIndex": 1
     }
   },
-  "NextColorIndex": 1
+  "NextColorIndex": 2
 }
