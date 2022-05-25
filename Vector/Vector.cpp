@@ -6,6 +6,5 @@ using std::endl;
 
 int main()
 {
-    CustomVector<int> v(2);
 
 }

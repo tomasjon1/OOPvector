@@ -5,7 +5,6 @@
 template <class valueType>
 class CustomVector
 {
-
 public:
     valueType* _element; 
     int _size;
@@ -24,12 +23,14 @@ public:
     CustomVector(const CustomVector<valueType>& vect);
     CustomVector(const std::initializer_list<valueType>& vec);
 
-    ~CustomVector() {
-        delete[] _element;
-    }
+    ~CustomVector() { delete[] _element; }
 
-    CustomVector& operator=(CustomVector&& vect);
-    CustomVector& operator=(const CustomVector<valueType>& vect);
+    CustomVector& operator=(CustomVector&& vect);                       // Move semantic
+    CustomVector& operator=(const CustomVector<valueType>& vect);       // Copy semantic
+
+    iterator begin();
+    const_iterator begin() const;
+    const_iterator cbegin() const;
 
 };
 
@@ -94,5 +95,23 @@ CustomVector<valueType>& CustomVector<valueType>::operator=(const CustomVector<v
     _size = vec._size;
     _capacity = vec._capacity;
     return *this;
+}
+
+template<class valueType>
+typename CustomVector<valueType>::iterator CustomVector<valueType>::begin()
+{
+    return _element;
+}
+
+template<class valueType>
+typename CustomVector<valueType>::const_iterator CustomVector<valueType>::begin() const
+{
+    return _element;
+}
+
+template<class valueType>
+typename CustomVector<valueType>::const_iterator CustomVector<valueType>::cbegin() const
+{
+    return _element;
 }
 
