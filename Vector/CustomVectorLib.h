@@ -12,7 +12,7 @@ public:
 
 public:
     using size_type = std::size_t;
-    using iterator = valueType*;
+    using iterator = valueType*;                                          // valueType* iterator (keep addresses)
     using const_iterator = const valueType*;
     using reverse_iterator = std::reverse_iterator<iterator>;
     using const_reverse_iterator = std::reverse_iterator<const_iterator>;
@@ -44,7 +44,13 @@ public:
     const_reverse_iterator rend() const;
     const_reverse_iterator crend() const;
 
-
+    int size() const { return _size; }
+    size_t max_size() const;
+    void resize(int new_size);
+    int capacity() const { return _capacity; }
+    bool empty() const;
+    void reserve(int new_size);
+    void shrink_to_fit();
 
 };
 
@@ -80,7 +86,6 @@ CustomVector<valueType>::CustomVector(const std::initializer_list<valueType>& ve
     for (int i = 0; i < vect.size(); i++)
         _element[i] = *(vect.begin() + i);
 }
-
 
 template <class valueType>
 CustomVector<valueType>& CustomVector<valueType>::operator=(CustomVector&& vec)
@@ -182,3 +187,56 @@ typename CustomVector<valueType>::const_reverse_iterator CustomVector<valueType>
 {
     return rbegin();
 }
+
+template <class valueType>
+size_t CustomVector<valueType>::max_size() const
+{
+    return std::numeric_limits<size_type>::max();
+}
+
+template<class valueType>
+void CustomVector<valueType>::resize(int new_size)
+{
+    if (new_size < 0)
+        throw std::exception();
+    if (new_size < _size)
+        _size = new_size;
+    if (new_size > _capacity)
+    {
+        valueType* temp = new valueType[new_size];
+
+        for (int i = 0; i < _size; i++)
+            temp[i] = _element[i];
+
+        delete[] _element;
+        _element = temp;
+        _capacity = new_size;
+    }
+}
+
+template <class valueType>
+bool CustomVector<valueType>::empty() const
+{
+    return (_size == 0);
+}
+
+template<class valueType>
+void CustomVector<valueType>::reserve(int amt)
+{
+    if (_capacity < amt)
+        resize(amt);
+}
+
+template<class valueType>
+void CustomVector<valueType>::shrink_to_fit()
+{
+    valueType* temp = new valueType[_size];
+
+    for (int i = 0; i < _size; i++)
+        temp[i] = _element[i];
+
+    delete[] _element;
+    _element = temp;
+    _capacity = _size;
+}
+
