@@ -5,14 +5,15 @@
 template <class valueType>
 class CustomVector
 {
-public:
-    valueType* _element; 
-    int _size;
-    int _capacity;       
+
+private:
+    valueType* _element;
+    int _size, _capacity;
 
 public:
     using size_type = std::size_t;
-    using iterator = valueType*;                            
+    using value_type = valueType;
+    using iterator = valueType*;
     using const_iterator = const valueType*;
     using reverse_iterator = std::reverse_iterator<iterator>;
     using const_reverse_iterator = std::reverse_iterator<const_iterator>;
@@ -20,13 +21,16 @@ public:
     CustomVector() : _element(new valueType[0]), _size(), _capacity() {}
     explicit CustomVector(int size);
     CustomVector(int size, int val);
-    CustomVector(const CustomVector<valueType>& vect);
     CustomVector(const std::initializer_list<valueType>& vec);
+    CustomVector(const CustomVector<valueType>& vec);
+    template<class InputIterator> CustomVector(InputIterator first, InputIterator last);
 
-    ~CustomVector() { delete[] _element; }
+    ~CustomVector() {
+        delete[] _element;
+    }
 
-    CustomVector& operator=(CustomVector&& vect);                      
-    CustomVector& operator=(const CustomVector<valueType>& vect);      
+    CustomVector& operator=(CustomVector&& vect);
+    CustomVector& operator=(const CustomVector<valueType>& vect);
 
     iterator begin();
     const_iterator begin() const;
@@ -35,13 +39,11 @@ public:
     iterator end();
     const_iterator end() const;
     const_iterator cend() const;
-
     reverse_iterator rbegin();
-    const_reverse_iterator rbegin() const;
-    const_reverse_iterator crbegin() const;
-
     reverse_iterator rend();
+    const_reverse_iterator rbegin() const;
     const_reverse_iterator rend() const;
+    const_reverse_iterator crbegin() const;
     const_reverse_iterator crend() const;
 
     int size() const { return _size; }
@@ -60,17 +62,13 @@ public:
 
     void push_back(const valueType& value);
     void pop_back();
-
     iterator insert(iterator ndx, const valueType& val);
     iterator erase(iterator ndx);
     iterator erase(iterator first, iterator last);
-
     void swap(CustomVector& vect);
     void clear();
-
     template <typename ... Args> valueType& emplace_back(Args&& ... args);
     template <typename ... Args> iterator emplace(const_iterator pos, Args&& ... args);
-
     void move_elem(valueType* dest, valueType* from, size_type n);
     void swap(valueType& x, valueType& y);
 
@@ -80,17 +78,16 @@ public:
     bool operator!=(const CustomVector<valueType>& vect) const;
     bool operator>(const CustomVector<valueType>& vect) const;
     bool operator<(const CustomVector<valueType>& vect) const;
-
 };
 
 template<class valueType>
-CustomVector<valueType>::CustomVector(int size) : _size(size), _capacity(size) 
+CustomVector<valueType>::CustomVector(int size) : _size(size), _capacity(size)
 {
     _element = new valueType[size];
 }
 
 template<class valueType >
-CustomVector<valueType>::CustomVector(int size, int val) : _size(size), _capacity(size) 
+CustomVector<valueType>::CustomVector(int size, int val) : _size(size), _capacity(size)
 {
     _element = new valueType[_size];
 
@@ -114,6 +111,19 @@ CustomVector<valueType>::CustomVector(const std::initializer_list<valueType>& ve
 
     for (int i = 0; i < vect.size(); i++)
         _element[i] = *(vect.begin() + i);
+}
+
+template<class valueType>
+template<class InputIterator>
+CustomVector<valueType>::CustomVector(InputIterator first, InputIterator last)
+{
+    size_type count = 0;
+    for (InputIterator curr = first; curr != last; ++curr) ++count;
+    _size = count;
+    _capacity = count + count / 2 + 1;
+    _element = new valueType[_capacity];
+    for (size_type i = 0; i < count; i++)
+        _element[i] = *first++;
 }
 
 template <class valueType>
@@ -160,7 +170,7 @@ typename CustomVector<valueType>::const_iterator CustomVector<valueType>::begin(
 template<class valueType>
 typename CustomVector<valueType>::const_iterator CustomVector<valueType>::cbegin() const
 {
-    return _element;
+    return begin();
 }
 
 template<class valueType>
@@ -184,13 +194,25 @@ typename CustomVector<valueType>::const_iterator CustomVector<valueType>::cend()
 template<class valueType>
 typename CustomVector<valueType>::reverse_iterator CustomVector<valueType>::rbegin()
 {
-    return _element + _size;
+    return reverse_iterator(_element + _size);
+}
+
+template<class valueType>
+typename CustomVector<valueType>::reverse_iterator CustomVector<valueType>::rend()
+{
+    return reverse_iterator(_element);
 }
 
 template<class valueType>
 typename CustomVector<valueType>::const_reverse_iterator CustomVector<valueType>::rbegin() const
 {
-    return _element + _size;
+    return reverse_iterator(_element + _size);
+}
+
+template<class valueType>
+typename CustomVector<valueType>::const_reverse_iterator CustomVector<valueType>::rend() const
+{
+    return reverse_iterator(_element);
 }
 
 template<class valueType>
@@ -200,21 +222,9 @@ typename CustomVector<valueType>::const_reverse_iterator CustomVector<valueType>
 }
 
 template<class valueType>
-typename CustomVector<valueType>::reverse_iterator CustomVector<valueType>::rend()
-{
-    return _element;
-}
-
-template<class valueType>
-typename CustomVector<valueType>::const_reverse_iterator CustomVector<valueType>::rend() const
-{
-    return _element;
-}
-
-template<class valueType>
 typename CustomVector<valueType>::const_reverse_iterator CustomVector<valueType>::crend() const
 {
-    return rbegin();
+    return rend();
 }
 
 template <class valueType>
@@ -346,8 +356,8 @@ typename CustomVector<valueType>::iterator CustomVector<valueType>::erase(iterat
     int i = 0;
     auto it = (*this).begin();
     for (it; it != ndx; it++, i++);
-        for (auto it = ndx + 1; it != (*this).end(); it++, i++)
-            _element[i] = _element[i + 1];
+    for (auto it = ndx + 1; it != (*this).end(); it++, i++)
+        _element[i] = _element[i + 1];
     _size--;
     return ndx;
 }
@@ -359,9 +369,9 @@ typename CustomVector<valueType>::iterator CustomVector<valueType>::erase(iterat
     int temp = 0;
     auto it = (*this).begin();
     for (it; it != first; it++, i++);
-        for (it = first; it != last; it++, temp++, i++);
-            for (auto it = last; it != (*this).end(); it++, i++)
-                _element[i - temp] = _element[i];
+    for (it = first; it != last; it++, temp++, i++);
+    for (auto it = last; it != (*this).end(); it++, i++)
+        _element[i - temp] = _element[i];
     _size -= temp;
     return last;
 }
@@ -436,6 +446,19 @@ void CustomVector<valueType>::swap(valueType& x, valueType& y)
     valueType temp = x;
     x = y;
     y = temp;
+}
+
+template<class valueType>
+bool CustomVector<valueType>::operator==(const CustomVector<valueType>& vect) const
+{
+    if (_size == vect._size && _capacity == vect._capacity)
+    {
+        for (int i = 0; i < _size; i++)
+            if (_element[i] != vect._element[i])
+                return false;
+        return true;
+    }
+    return false;
 }
 
 template<class valueType>

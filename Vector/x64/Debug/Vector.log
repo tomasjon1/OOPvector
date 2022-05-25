@@ -1,2 +1,17 @@
 ﻿  Vector.cpp
+C:\Users\tomasjona\Desktop\Mano\OOPvector\Vector\Vector.cpp(78,28): warning C4018: '<': signed/unsigned mismatch
+C:\Users\tomasjona\Desktop\Mano\OOPvector\Vector\Vector.cpp(83,28): warning C4018: '<': signed/unsigned mismatch
+C:\Users\tomasjona\Desktop\Mano\OOPvector\Vector\Vector.cpp(91,18): warning C4101: 'i': unreferenced local variable
+C:\Users\tomasjona\Desktop\Mano\OOPvector\Vector\CustomVectorLib.h(109,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\tomasjona\Desktop\Mano\OOPvector\Vector\CustomVectorLib.h(108): message : while compiling class template member function 'CustomVector<int>::CustomVector(const std::initializer_list<valueType> &)'
+          with
+          [
+              valueType=int
+          ]
+C:\Users\tomasjona\Desktop\Mano\OOPvector\Vector\Vector.cpp(118): message : see reference to function template instantiation 'CustomVector<int>::CustomVector(const std::initializer_list<valueType> &)' being compiled
+          with
+          [
+              valueType=int
+          ]
+C:\Users\tomasjona\Desktop\Mano\OOPvector\Vector\Vector.cpp(47): message : see reference to class template instantiation 'CustomVector<int>' being compiled
   Vector.vcxproj -> C:\Users\tomasjona\Desktop\Mano\OOPvector\x64\Debug\Vector.exe
