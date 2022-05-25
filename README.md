@@ -3,8 +3,8 @@
 ## Ištestuoti metodai
 
 * emplace
-* member swap
-* non-member swap
+* swap
+* == operator
 * shrink_to_fit
 * crend
 
