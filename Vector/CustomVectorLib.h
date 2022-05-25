@@ -12,7 +12,7 @@ public:
 
 public:
     using size_type = std::size_t;
-    using iterator = valueType*;                                          
+    using iterator = valueType*;                            
     using const_iterator = const valueType*;
     using reverse_iterator = std::reverse_iterator<iterator>;
     using const_reverse_iterator = std::reverse_iterator<const_iterator>;
@@ -60,6 +60,26 @@ public:
 
     void push_back(const valueType& value);
     void pop_back();
+
+    iterator insert(iterator ndx, const valueType& val);
+    iterator erase(iterator ndx);
+    iterator erase(iterator first, iterator last);
+
+    void swap(CustomVector& vect);
+    void clear();
+
+    template <typename ... Args> valueType& emplace_back(Args&& ... args);
+    template <typename ... Args> iterator emplace(const_iterator pos, Args&& ... args);
+
+    void move_elem(valueType* dest, valueType* from, size_type n);
+    void swap(valueType& x, valueType& y);
+
+    bool operator==(const CustomVector<valueType>& vect) const;
+    bool operator>=(const CustomVector<valueType>& vect) const;
+    bool operator<=(const CustomVector<valueType>& vect) const;
+    bool operator!=(const CustomVector<valueType>& vect) const;
+    bool operator>(const CustomVector<valueType>& vect) const;
+    bool operator<(const CustomVector<valueType>& vect) const;
 
 };
 
@@ -288,4 +308,190 @@ void CustomVector<valueType>::pop_back()
 {
     if (_size > 0)
         _size--;
+}
+
+template<class valueType>
+typename CustomVector<valueType>::iterator CustomVector<valueType>::insert(iterator iter, const valueType& val)
+{
+    int i = 0;
+
+    if (_capacity > _size)
+    {
+        for (iterator it(_element + _size); it != iter; it--, i++)
+            _element[_size - i] = _element[_size - i - 1];
+        *iter = val;
+        _size++;
+    }
+    else
+    {
+        valueType* temp = new valueType[_size + 1];
+        for (iterator it(_element); it != iter; it++, i++)
+            temp[i] = _element[i];
+        temp[i] = val;
+        i++;
+
+        for (iterator it(_element + i + 1); it != _element + _size + 2; it++, i++)
+            temp[i] = _element[i - 1];
+        delete[] _element;
+        _element = temp;
+        _size++;
+        _capacity = _size;
+    }
+    return iter;
+}
+
+template<class valueType>
+typename CustomVector<valueType>::iterator CustomVector<valueType>::erase(iterator ndx)
+{
+    int i = 0;
+    auto it = (*this).begin();
+    for (it; it != ndx; it++, i++);
+        for (auto it = ndx + 1; it != (*this).end(); it++, i++)
+            _element[i] = _element[i + 1];
+    _size--;
+    return ndx;
+}
+
+template<class valueType>
+typename CustomVector<valueType>::iterator CustomVector<valueType>::erase(iterator first, iterator last)
+{
+    int i = 0;
+    int temp = 0;
+    auto it = (*this).begin();
+    for (it; it != first; it++, i++);
+        for (it = first; it != last; it++, temp++, i++);
+            for (auto it = last; it != (*this).end(); it++, i++)
+                _element[i - temp] = _element[i];
+    _size -= temp;
+    return last;
+}
+
+template<class valueType>
+void CustomVector<valueType>::swap(CustomVector& vect)
+{
+    std::swap(_element, vect._element);
+    std::swap(_size, vect._size);
+    std::swap(_capacity, vect._capacity);
+}
+
+template <class valueType>
+void CustomVector<valueType>::clear()
+{
+    _capacity = 0;
+    _size = 0;
+    delete[] _element;
+}
+
+template <class valueType>
+template <typename ... Args>
+valueType& CustomVector<valueType>::emplace_back(Args&& ... args)
+{
+    if (_size == _capacity)
+    {
+        reserve(_capacity + _capacity / 2 + 1);
+    }
+    return _element[_size++] = std::move(valueType(std::forward<Args>(args) ...));
+}
+
+template<typename valueType>
+template<typename ...Args>
+typename CustomVector<valueType>::iterator CustomVector<valueType>::emplace(const_iterator iter, Args && ...args)
+{
+    size_type pos = iter - _element;
+    iterator _iter = &_element[pos];
+
+    if (_size == _capacity)
+    {
+        reserve(_capacity + _capacity / 2 + 1);
+    }
+    _iter = &_element[pos];
+    move_elem(_iter + 1, _iter, _size - (_iter - _element));
+    ++_size;
+    *_iter = std::move(valueType(std::forward<Args>(args) ...));
+    return _iter;
+}
+
+template<typename valueType>
+void CustomVector<valueType>::move_elem(valueType* dest, valueType* from, size_type n)
+{
+    if (dest < from)
+    {
+        valueType* _dest = dest, * _from = from;
+        for (size_t i = 0; i < n; i++)
+            *_dest++ = std::move(*_from++);
+    }
+    else if (dest > from)
+    {
+        valueType* _dest = dest + n - 1, * _from = from + n - 1;
+        for (size_t i = n; i > 0; i--)
+            *_dest-- = std::move(*_from--);
+    }
+    else
+        return;
+}
+
+template <class valueType>
+void CustomVector<valueType>::swap(valueType& x, valueType& y)
+{
+    valueType temp = x;
+    x = y;
+    y = temp;
+}
+
+template<class valueType>
+bool CustomVector<valueType>::operator>=(const CustomVector<valueType>& vect) const
+{
+    if (_size == vect._size && _capacity == vect._capacity)
+    {
+        for (int i = 0; i < _size; i++)
+            if (_element[i] <= vect._element[i])
+                return false;
+        return true;
+    }
+    else return (_size >= vect._size && _capacity >= vect._capacity);
+}
+
+template<class valueType>
+bool CustomVector<valueType>::operator<=(const CustomVector<valueType>& vect) const
+{
+    if (_size == vect._size && _capacity == vect._capacity)
+    {
+        for (int i = 0; i < _size; i++)
+            if (_element[i] >= vect._element[i])
+                return false;
+        return true;
+    }
+    else return (_size <= vect._size && _capacity <= vect._capacity);
+}
+
+template<class valueType>
+bool CustomVector<valueType>::operator!=(const CustomVector<valueType>& vect) const
+{
+    return !operator==(vect);
+}
+
+template<class valueType>
+bool CustomVector<valueType>::operator>(const CustomVector<valueType>& vect) const
+{
+    if (_size == vect._size && _capacity == vect._capacity)
+    {
+        for (int i = 0; i < _size; i++)
+            if (_element[i] < vect._element[i])
+                return false;
+        return true;
+    }
+    else return (_size > vect._size && _capacity > vect._capacity);
+}
+
+template<class valueType>
+bool CustomVector<valueType>::operator<(const CustomVector<valueType>& vect) const
+{
+    if (_size == vect._size && _capacity == vect._capacity)
+    {
+        for (int i = 0; i < _size; i++)
+            if (_element[i] > vect._element[i])
+                return false;
+        return true;
+    }
+    else return (_size < vect._size&& _capacity < vect._capacity);
 }
