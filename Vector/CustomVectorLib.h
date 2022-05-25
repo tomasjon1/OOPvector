@@ -12,7 +12,7 @@ public:
 
 public:
     using size_type = std::size_t;
-    using iterator = valueType*;                                          // valueType* iterator (keep addresses)
+    using iterator = valueType*;                                          
     using const_iterator = const valueType*;
     using reverse_iterator = std::reverse_iterator<iterator>;
     using const_reverse_iterator = std::reverse_iterator<const_iterator>;
@@ -25,8 +25,8 @@ public:
 
     ~CustomVector() { delete[] _element; }
 
-    CustomVector& operator=(CustomVector&& vect);                       // Move semantic
-    CustomVector& operator=(const CustomVector<valueType>& vect);       // Copy semantic
+    CustomVector& operator=(CustomVector&& vect);                      
+    CustomVector& operator=(const CustomVector<valueType>& vect);      
 
     iterator begin();
     const_iterator begin() const;
@@ -51,6 +51,15 @@ public:
     bool empty() const;
     void reserve(int new_size);
     void shrink_to_fit();
+
+    valueType& operator[](int i) { return _element[i]; }
+    valueType& at(int pos);
+    valueType& front();
+    valueType& back();
+    valueType* data();
+
+    void push_back(const valueType& value);
+    void pop_back();
 
 };
 
@@ -240,3 +249,43 @@ void CustomVector<valueType>::shrink_to_fit()
     _capacity = _size;
 }
 
+template <class valueType>
+valueType& CustomVector<valueType>::at(int pos)
+{
+    if (pos >= _size)
+        throw std::out_of_range("Index was out of range.");
+    return _element[pos];
+}
+
+template <class valueType>
+valueType& CustomVector<valueType>::front()
+{
+    return _element[0];
+}
+
+template <class valueType>
+valueType& CustomVector<valueType>::back()
+{
+    return _element[_size - 1];
+}
+
+template <class valueType>
+valueType* CustomVector<valueType>::data()
+{
+    return _element;
+}
+
+template<class valueType>
+void CustomVector<valueType>::push_back(const valueType& value)
+{
+    if (_size == _capacity)
+        reserve(2 * _capacity + 1);
+    _element[_size++] = value;
+}
+
+template<class valueType>
+void CustomVector<valueType>::pop_back()
+{
+    if (_size > 0)
+        _size--;
+}
