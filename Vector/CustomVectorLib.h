@@ -13,7 +13,6 @@ public:
 
 public:
     using size_type = std::size_t;
-    using value_type = valueType;
     using iterator = valueType*;
     using const_iterator = const valueType*;
     using reverse_iterator = std::reverse_iterator<iterator>;
@@ -24,6 +23,13 @@ public:
     CustomVector(int size, int val);
     CustomVector(const CustomVector<valueType>& vect);
     CustomVector(const std::initializer_list<valueType>& vec);
+
+    ~CustomVector() {
+        delete[] _element;
+    }
+
+    CustomVector& operator=(CustomVector&& vect);
+    CustomVector& operator=(const CustomVector<valueType>& vect);
 
 };
 
@@ -58,5 +64,35 @@ CustomVector<valueType>::CustomVector(const std::initializer_list<valueType>& ve
 
     for (int i = 0; i < vect.size(); i++)
         _element[i] = *(vect.begin() + i);
+}
+
+
+template <class valueType>
+CustomVector<valueType>& CustomVector<valueType>::operator=(CustomVector&& vec)
+{
+    if (&vec == this)
+        return *this;
+    _element = vec._element;
+    _size = vec._size;
+    _capacity = vec._capacity;
+    vec._element = nullptr;
+    vec._size = 0;
+    vec._capacity = 0;
+    return *this;
+}
+
+template <class valueType>
+CustomVector<valueType>& CustomVector<valueType>::operator=(const CustomVector<valueType>& vec)
+{
+    if (&vec == this)
+        return *this;
+    valueType* newCont = new valueType[vec._size];
+    for (int i = 0; i != vec._size; ++i)
+        newCont[i] = vec._element[i];
+    delete[] _element;
+    _element = newCont;
+    _size = vec._size;
+    _capacity = vec._capacity;
+    return *this;
 }
 
