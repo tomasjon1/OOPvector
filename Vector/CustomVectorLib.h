@@ -32,6 +32,20 @@ public:
     const_iterator begin() const;
     const_iterator cbegin() const;
 
+    iterator end();
+    const_iterator end() const;
+    const_iterator cend() const;
+
+    reverse_iterator rbegin();
+    const_reverse_iterator rbegin() const;
+    const_reverse_iterator crbegin() const;
+
+    reverse_iterator rend();
+    const_reverse_iterator rend() const;
+    const_reverse_iterator crend() const;
+
+
+
 };
 
 template<class valueType>
@@ -115,3 +129,56 @@ typename CustomVector<valueType>::const_iterator CustomVector<valueType>::cbegin
     return _element;
 }
 
+template<class valueType>
+typename CustomVector<valueType>::iterator CustomVector<valueType>::end()
+{
+    return _element + _size;
+}
+
+template<class valueType>
+typename CustomVector<valueType>::const_iterator CustomVector<valueType>::end() const
+{
+    return _element + _size;
+}
+
+template<class valueType>
+typename CustomVector<valueType>::const_iterator CustomVector<valueType>::cend() const
+{
+    return end();
+}
+
+template<class valueType>
+typename CustomVector<valueType>::reverse_iterator CustomVector<valueType>::rbegin()
+{
+    return _element + _size;
+}
+
+template<class valueType>
+typename CustomVector<valueType>::const_reverse_iterator CustomVector<valueType>::rbegin() const
+{
+    return _element + _size;
+}
+
+template<class valueType>
+typename CustomVector<valueType>::const_reverse_iterator CustomVector<valueType>::crbegin() const
+{
+    return rbegin();
+}
+
+template<class valueType>
+typename CustomVector<valueType>::reverse_iterator CustomVector<valueType>::rend()
+{
+    return _element;
+}
+
+template<class valueType>
+typename CustomVector<valueType>::const_reverse_iterator CustomVector<valueType>::rend() const
+{
+    return _element;
+}
+
+template<class valueType>
+typename CustomVector<valueType>::const_reverse_iterator CustomVector<valueType>::crend() const
+{
+    return rbegin();
+}
