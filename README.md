@@ -24,7 +24,9 @@
 | **std::vector**                       | 100 000 |
 | ------------------------------------- | ------- |
 | Bendras vykdymo laikas                | 1.789s  |
+| Perkistymai                           |   18    |
 
 | **CustomVector**                      | 100 000 |
 | ------------------------------------- | ------- |
 | Bendras vykdymo laikas                | 2.356s  |
+| Perkistymai                           |    17   |
